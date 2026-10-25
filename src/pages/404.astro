@@ -1,0 +1,5 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../lib/site';
+---
+<BaseLayout title="这一页走丢了" canonicalPath={url('/404.html')} noindex><section class="shell studio-interior error-page"><p class="eyebrow">A SMALL DETOUR / 偶尔也会迷路</p><span class="error-number">404<span>.</span></span><h1>这条小路，还没画在地图上。</h1><p>也许链接发生了变化。工作室的灯还亮着，<br/>先回去坐坐，再继续探索吧。</p><a class="button primary" href={url('/')}>回到工作室 <span aria-hidden="true">↗</span></a></section></BaseLayout>

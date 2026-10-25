@@ -1,0 +1,103 @@
+<section class="wandering-note shell" id="wandering-note" aria-labelledby="wandering-title">
+  <div class="wandering-paper">
+    <span class="wandering-pin" aria-hidden="true"></span>
+    <div class="wandering-caption">
+      <p>来自奇想小屋的漫游签</p>
+      <h2 id="wandering-title">今天，往哪儿想？</h2>
+      <span class="wandering-doodle" aria-hidden="true">↝</span>
+    </div>
+    <p class="wandering-prompt" aria-live="polite" aria-atomic="true">今天的云，像哪一种还没被发明的动物？</p>
+    <button class="wandering-draw" type="button" hidden>再抽一张 <span aria-hidden="true">↗</span></button>
+  </div>
+</section>
+
+<style>
+  .wandering-note { padding-block: 25px 45px; }
+  .wandering-paper {
+    position: relative;
+    display: grid;
+    grid-template-columns: 215px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 28px;
+    padding: 34px 36px 29px;
+    background: #fff9e9;
+    border-bottom: 1px solid #e0d7bd;
+    box-shadow: 0 6px 0 -4px #dcd9c7;
+    transform: rotate(-.5deg);
+  }
+  .wandering-paper::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border-style: solid;
+    border-width: 0 0 18px 18px;
+    border-color: transparent transparent var(--paper, #f5f0e5) #e8dfc4;
+  }
+  .wandering-pin {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    top: 10px;
+    left: 27px;
+    background: #c18465;
+    box-shadow: 1px 2px 0 #9d6b4c40;
+  }
+  .wandering-caption { position: relative; padding-right: 18px; }
+  .wandering-caption > p { font-size: 10px; letter-spacing: .13em; color: #798576; margin: 0 0 8px; }
+  .wandering-caption h2 { font-size: 18px; font-weight: 500; letter-spacing: -.025em; color: #52675a; margin: 0; }
+  .wandering-doodle { position: absolute; right: -4px; top: 19px; color: #b48468; font-family: Georgia, serif; font-size: 34px; transform: rotate(-10deg); }
+  .wandering-prompt { margin: 0; font-family: var(--serif, "Songti SC", serif); font-size: 21px; line-height: 1.8; letter-spacing: -.02em; color: #4b5a50; text-wrap: pretty; }
+  .wandering-draw { display: inline-flex; align-items: center; justify-content: center; gap: 14px; background: transparent; border: 0; border-bottom: 1px solid #b9c0ab; border-radius: 0; color: #6c7a62; font-size: 12px; padding: 9px 0; white-space: nowrap; min-height: 44px; }
+  .wandering-draw:hover { color: #a36449; border-color: #b68062; }
+  .wandering-draw > span { font-size: 17px; }
+  @media (max-width: 950px) {
+    .wandering-paper { grid-template-columns: 180px minmax(0, 1fr); gap: 20px 26px; padding: 32px 28px 25px; }
+    .wandering-draw { grid-column: 2; justify-self: start; }
+    .wandering-caption { align-self: start; }
+    .wandering-prompt { font-size: 20px; }
+  }
+  @media (max-width: 600px) {
+    .wandering-note { padding-block: 17px 32px; }
+    .wandering-paper { grid-template-columns: 1fr; gap: 18px; padding: 30px 24px 22px; transform: none; }
+    .wandering-caption { padding-right: 35px; }
+    .wandering-caption > p { font-size: 9px; margin-bottom: 6px; }
+    .wandering-caption h2 { font-size: 18px; }
+    .wandering-doodle { right: 8px; top: 4px; transform: rotate(45deg); }
+    .wandering-prompt { font-size: 20px; line-height: 1.85; }
+    .wandering-draw { grid-column: 1; font-size: 11px; margin-top: -5px; }
+  }
+</style>
+
+<script>
+  const note = document.querySelector<HTMLElement>('.wandering-note');
+  const prompt = note?.querySelector<HTMLElement>('.wandering-prompt');
+  const draw = note?.querySelector<HTMLButtonElement>('.wandering-draw');
+  const prompts = [
+    '今天的云，像哪一种还没被发明的动物？',
+    '如果今天是一部电影，你会给它起什么名字？',
+    '书架后面突然多了一扇门，你猜它通向哪里？',
+    '给一年后的自己寄一封信，第一句话会是什么？',
+    '月亮想换个名字。你有什么好主意？',
+    '如果把一种心情装进瓶子，你会选什么颜色？',
+    '想象一条只在夜里出现的小路，它的尽头有什么？',
+    '今天可以暂停十分钟。你想把这十分钟放在哪里？',
+  ];
+  if (prompt && draw) {
+    let current = 0;
+    let turn: Animation | undefined;
+    draw.hidden = false;
+    draw.addEventListener('click', () => {
+      current = (current + 1 + Math.floor(Math.random() * (prompts.length - 1))) % prompts.length;
+      prompt.textContent = prompts[current];
+      turn?.cancel();
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        turn = prompt.animate(
+          [{ opacity: .35, transform: 'translateY(4px)' }, { opacity: 1, transform: 'translateY(0)' }],
+          { duration: 240, easing: 'ease-out' },
+        );
+      }
+    });
+  }
+</script>

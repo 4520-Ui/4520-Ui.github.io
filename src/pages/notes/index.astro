@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NotesNav from '../../components/NotesNav.astro';
+import NoteCard from '../../components/NoteCard.astro';
+import Icon from '../../components/Icon.astro';
+import { publicNotes, url } from '../../lib/site';
+const notes = await publicNotes();
+const knowledgeCount = notes.filter(n => n.data.kind === 'knowledge').length;
+const journalCount = notes.length - knowledgeCount;
+---
+<BaseLayout title="记录" description="Leo 的公开知识与成长记录：整理学习中的发现，留下实践中的思考。">
+  <div class="shell studio-interior notebook-page">
+    <header class="page-heading">
+      <p class="eyebrow"><span class="chapter-marker">01</span> THE BOOKSHELF / 生长的书架</p>
+      <h1>想法有了纸，<br/><em>就会慢慢生长。</em></h1>
+      <p>一些整理清楚的知识，一些尚在路上的思考。<br class="desktop-break"/>随意翻翻，希望有一页刚好对你有用。</p>
+      <span class="margin-note" aria-hidden="true">随时欢迎添上新的一页 ↙</span>
+    </header>
+    <div class="notes-pathways">
+      <a href={url('/notes/knowledge/')}><div class="pathway-icon"><Icon name="book" size={27}/></div><div><h2>知识分享 <span>KNOWLEDGE</span></h2><p>按主题整理，让知识彼此连接。</p></div><span class="pathway-count">{knowledgeCount} 篇 ↗</span></a>
+      <a href={url('/notes/journal/')}><div class="pathway-icon peach-bg"><Icon name="spark" size={27}/></div><div><h2>成长记录 <span>JOURNAL</span></h2><p>按时间回望，给每段探索留个注脚。</p></div><span class="pathway-count">{journalCount} 篇 ↗</span></a>
+    </div>
+    <NotesNav active="all"/>
+    <div class="note-grid listing-grid">{notes.map((note,index) => <NoteCard note={note} index={index}/>)}{!notes.length && <p class="empty-state">第一批公开笔记正在整理，欢迎之后再来看看。</p>}</div>
+  </div>
+</BaseLayout>

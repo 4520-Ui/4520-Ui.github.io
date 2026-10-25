@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NotesNav from '../../components/NotesNav.astro';
+import NoteCard from '../../components/NoteCard.astro';
+import { publicNotes } from '../../lib/site';
+const notes = (await publicNotes()).filter(n => n.data.kind === 'knowledge');
+const topics = [...new Set(notes.flatMap(n => n.data.tags))];
+---
+<BaseLayout title="知识分享" description="按主题浏览 Leo 整理的公开知识、学习方法与技术实践笔记。"><div class="shell studio-interior notebook-page"><header class="page-heading"><p class="eyebrow"><span class="chapter-marker">02 / A</span> KNOWLEDGE / 知识分享</p><h1>把线索，<br/><em>连成自己的理解。</em></h1><p>从一个问题开始，把背景、理解和线索整理清楚。<br class="desktop-break"/>这些笔记会随着新的认识，继续修订。</p><span class="margin-note" aria-hidden="true">这本笔记，还没有写完。</span></header><NotesNav active="knowledge"/>{topics.length > 0 && <div class="topic-filter" role="group" aria-label="按主题筛选"><button class="topic-chip active" data-topic="" aria-pressed="true">全部主题 <span>{notes.length}</span></button>{topics.map(topic => <button class="topic-chip" data-topic={topic} aria-pressed="false">{topic}</button>)}</div>}<p id="filter-status" class="sr-only" role="status"></p><div class="note-grid listing-grid">{notes.map((note,index) => <div class="filter-note" data-tags={JSON.stringify(note.data.tags)}><NoteCard note={note} index={index}/></div>)}{!notes.length && <p class="empty-state">主题会随着公开笔记逐渐生长，第一批内容正在整理。</p>}</div></div></BaseLayout>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.topic-chip').forEach(button => button.addEventListener('click', () => {
+    const topic = button.dataset.topic || '';
+    document.querySelectorAll('.topic-chip').forEach(chip => { chip.classList.toggle('active', chip === button); chip.setAttribute('aria-pressed', String(chip === button)); });
+    let visible = 0;
+    document.querySelectorAll<HTMLElement>('.filter-note').forEach(card => { const tags = JSON.parse(card.dataset.tags || '[]') as string[]; card.hidden = !!topic && !tags.includes(topic); if (!card.hidden) visible++; });
+    const status = document.querySelector('#filter-status'); if (status) status.textContent = `${topic || '全部主题'}，共 ${visible} 篇笔记`;
+  }));
+</script>

@@ -1,0 +1,7 @@
+---
+import { url } from '../lib/site';
+interface Props { active: 'all'|'knowledge'|'journal' }
+const { active } = Astro.props;
+const tabs = [{ id: 'all', label: '全部记录', href: '/notes/' }, { id: 'knowledge', label: '知识分享', href: '/notes/knowledge/' }, { id: 'journal', label: '成长记录', href: '/notes/journal/' }];
+---
+<nav class="notes-nav" aria-label="记录分类">{tabs.map(tab => <a class:list={['notes-tab', { active: active === tab.id }]} href={url(tab.href)} aria-current={active === tab.id ? 'page' : undefined}>{tab.label}</a>)}</nav>

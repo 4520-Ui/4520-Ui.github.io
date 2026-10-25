@@ -1,0 +1,17 @@
+---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { publicNotes, url, dateLabel } from '../../lib/site';
+import graphData from '../../generated/note-graph.json';
+export async function getStaticPaths() { return (await publicNotes()).map(note => ({ params: { slug: note.data.slug }, props: { note } })); }
+interface Props { note: CollectionEntry<'notes'> }
+const { note } = Astro.props;
+const { Content, headings } = await render(note);
+const notes = await publicNotes();
+const graph = graphData as Record<string, {outgoing:string[];incoming:string[]}>;
+const relations = graph[note.data.slug] ?? { outgoing: [], incoming: [] };
+const outgoing = notes.filter(n => relations.outgoing.includes(n.data.slug));
+const incoming = notes.filter(n => relations.incoming.includes(n.data.slug));
+---
+<ArticleLayout title={note.data.title} description={note.data.summary} eyebrow={note.data.kind === 'knowledge' ? 'KNOWLEDGE / 知识分享' : 'JOURNAL / 成长记录'} backHref="/notes/" backLabel="返回记录" headings={headings}><Fragment slot="meta"><time datetime={note.data.date.toISOString()}>发布于 {dateLabel(note.data.date)}</time>{note.data.updated && <time datetime={note.data.updated.toISOString()}>更新于 {dateLabel(note.data.updated)}</time>}<span>吴鸿钰 / Leo</span><div class="tags">{note.data.tags.map(tag => <span>{tag}</span>)}</div></Fragment><Content/><div slot="after" class="article-relations">{outgoing.length > 0 && <section><p class="eyebrow">继续阅读</p>{outgoing.map(other => <a href={url(`/notes/${other.data.slug}/`)}>{other.data.title}<span>↗</span></a>)}</section>}{incoming.length > 0 && <section><p class="eyebrow">这些笔记引用了本页</p>{incoming.map(other => <a href={url(`/notes/${other.data.slug}/`)}>{other.data.title}<span>↗</span></a>)}</section>}<div class="article-end"><span>理解可以更新，记录可以继续。</span><a href={url('/contact/')}>交流与补充 ↗</a></div></div></ArticleLayout>

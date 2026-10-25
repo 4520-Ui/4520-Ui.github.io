@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NotesNav from '../../components/NotesNav.astro';
+import NoteCard from '../../components/NoteCard.astro';
+import { publicNotes } from '../../lib/site';
+const notes = (await publicNotes()).filter(n => n.data.kind === 'journal');
+---
+<BaseLayout title="成长记录" description="留下阶段总结、成长中的思考和新的尝试。"><div class="shell studio-interior notebook-page journal-page"><header class="page-heading"><p class="eyebrow"><span class="chapter-marker">02 / B</span> JOURNAL / 成长记录</p><h1>沿途的风景，<br/><em>慢慢记下来。</em></h1><p>阶段总结、项目复盘，也包括一些小小的发现。<br class="desktop-break"/>不急着写出答案，先认真记下每一步。</p><span class="margin-note" aria-hidden="true">一页，是一段路。</span></header><NotesNav active="journal"/><div class="note-grid listing-grid">{notes.map((note,index) => <NoteCard note={note} index={index}/>)}{!notes.length && <p class="empty-state">新的成长记录正在整理。</p>}</div></div></BaseLayout>

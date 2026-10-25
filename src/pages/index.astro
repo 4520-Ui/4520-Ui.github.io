@@ -1,0 +1,107 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import world from '../assets/studio/studio-dream.png';
+import WanderingNote from '../components/WanderingNote.astro';
+import character from '../assets/profile/character.png';
+import { profile } from '../data/profile';
+import { allProjects, publicNotes, url, dateLabel } from '../lib/site';
+const project = (await allProjects()).find(project => project.data.featured);
+const notes = (await publicNotes()).slice(0, 4);
+---
+<BaseLayout description="欢迎来到 Leo 的奇想小屋。云鲸路过窗外，想法藏进书页。在这里随便逛逛，看看生活、笔记和偶尔折腾的小东西。">
+  <div class="studio-home">
+    <section class="studio-arrival" aria-labelledby="welcome-heading">
+      <div class="world-stage" id="studio-world">
+        <Image src={world} alt="Leo 的幻想小屋：窗外游过云鲸，盆栽长着小行星，小门通向另一个世界。" widths={[640, 960, 1440, 1920]} sizes="100vw" width={1600} format="webp" quality={85} loading="eager" fetchpriority="high" class="world-art"/>
+        <span class="room-glow" aria-hidden="true"></span>
+      </div>
+      <div class="shell arrival-content">
+        <p class="studio-kicker"><span class="small-star" aria-hidden="true">✳</span> LEO'S LITTLE UNIVERSE</p>
+        <h1 id="welcome-heading">欢迎来到，<br/>Leo 的<span class="curious-word">奇想小屋</span><span class="coral-dot">。</span></h1>
+        <p class="arrival-intro">你好，我是 <strong>Leo · 吴鸿钰</strong>。<br/>这里装着一些想法、走过的路，<br/>和暂时没想明白的事。</p>
+        <div class="arrival-actions"><a class="studio-button" href="#notebook">随便逛逛 <Icon name="diagonal" size={19}/></a><a class="quiet-link" href={url('/about/')}>认识屋主 <Icon size={17}/></a></div>
+        <p class="arrival-footnote">今日小屋营业中 · 欢迎带着好奇心来 <span aria-hidden="true">✳</span></p>
+      </div>
+      <div class="world-caption"><span class="caption-stroke" aria-hidden="true">↳</span><span>允许发呆，<br/>也欢迎天马行空。</span></div>
+      <button class="lamp-toggle" type="button" aria-pressed="false" aria-controls="studio-world"><Icon name="lamp" size={20}/><span>让灯光暖一点</span></button>
+      <a class="scroll-invitation" href="#wandering-note"><span>往下走走</span><span class="scroll-line" aria-hidden="true">↓</span></a>
+    </section>
+
+    <nav class="chapter-map shell" aria-label="首页章节">
+      <p>随便逛逛，<br/><span>这里有我的几种模样。</span></p>
+      <a href="#notebook"><span>01</span> 翻翻手记 <Icon name="diagonal" size={15}/></a>
+      <a href="#outside"><span>02</span> 窗外发呆 <Icon name="diagonal" size={15}/></a>
+      <a href="#workbench"><span>03</span> 折腾小物 <Icon name="diagonal" size={15}/></a>
+      <a href="#mailbox"><span>04</span> 寄封信 <Icon name="diagonal" size={15}/></a>
+    </nav>
+
+    <WanderingNote/>
+
+    <section class="notebook chapter shell" id="notebook" aria-labelledby="notebook-heading">
+      <div class="notebook-intro"><p class="studio-kicker">01 / BETWEEN THE PAGES</p><h2 id="notebook-heading">藏进书页的，<br/><span class="pencil-underline">不只有答案。</span></h2><p>学到的，想通的，还在琢磨的。<br/>把它们写下来，也分享给路过的你。</p><div class="book-spines" aria-label="笔记分类"><a class="book-spine knowledge-spine" href={url('/notes/knowledge/')}><span>知识分享</span><small>LEARN / CONNECT / SHARE</small><Icon name="book" size={23}/></a><a class="book-spine journal-spine" href={url('/notes/journal/')}><span>成长记录</span><small>SMALL STEPS, REAL STORIES</small><Icon name="spark" size={23}/></a></div></div>
+      <div class="open-notebook"><span class="notebook-tab">随手翻翻</span><div class="notebook-running-head"><span>NOTES FROM MY DESK</span><span>{String(notes.length).padStart(2, '0')} 篇手记</span></div><div class="notebook-entries">{notes.map((note, index) => <a class="notebook-entry" href={url(`/notes/${note.data.slug}/`)}><span class="entry-number">{String(index + 1).padStart(2, '0')}</span><div><p class="entry-meta">{note.data.kind === 'knowledge' ? '知识分享' : '成长记录'}<span>{dateLabel(note.data.updated || note.data.date)}</span></p><h3>{note.data.title}</h3><p class="entry-summary">{note.data.summary}</p></div><Icon name="diagonal" size={20}/></a>)}</div><a class="notebook-more" href={url('/notes/')}><span>还有一些想法，留在这里。</span>全部记录 <Icon size={17}/></a></div>
+    </section>
+
+    <section class="outside chapter" id="outside" aria-labelledby="outside-heading">
+      <div class="shell outside-layout"><div class="field-note"><div class="field-note-top"><span>FIELD NOTES</span><span>生活也是实验室</span></div><div class="field-portrait"><span class="portrait-sun" aria-hidden="true"></span><Image src={character} alt="戴眼镜的 Leo 动漫角色，微笑着挥手" width={400} format="webp" quality={85} loading="lazy"/><span class="field-doodle doodle-one" aria-hidden="true">✳</span><span class="field-doodle doodle-two" aria-hidden="true">↗</span></div><p>保持好奇，认真生活。<span>— Leo</span></p><div class="interest-stamps"><span>跑酷</span><span>阅读</span><span>新的尝试</span></div></div><div class="outside-copy"><p class="studio-kicker">02 / BEYOND THE WINDOW</p><h2 id="outside-heading">书桌之外，<br/>也有很大的世界。</h2><p>有时沉进一个故事，有时出去跑跑跳跳。喜欢跑酷、阅读、动漫，也喜欢那些让我认识另一面的自己的新尝试。这里会慢慢留下生活中的小片段。</p><a class="quiet-link" href={url('/about/')}>多了解我一点 <Icon name="diagonal" size={17}/></a><div class="studio-now"><div class="now-heading"><span class="small-star" aria-hidden="true">✳</span><h3>最近的生活切片</h3><span>2026 / 10</span></div>{profile.now.map(item => <div class="studio-now-row"><span>{item.label}</span><p>{item.text}</p></div>)}</div></div></div>
+    </section>
+
+    <section class="workbench chapter" id="workbench" aria-labelledby="workbench-heading">
+      <div class="shell">
+        <div class="chapter-heading"><div><p class="studio-kicker">03 / THINGS I MAKE</p><h2 id="workbench-heading">偶尔，也把想法<br/><em>折腾成一点小东西。</em></h2></div><span class="handwritten-label">某一次好奇，留下的痕迹 ↙</span></div>
+        {project && <div class="workbench-layout">
+          <a class="blueprint" href={url(`/projects/${project.data.slug}/`)} aria-label={`打开项目：${project.data.title}`}>
+            <span class="paper-tape" aria-hidden="true"></span><span class="blueprint-topline">EXPERIMENT 001 <span>硬件探索手记</span></span>
+            <img src={url(project.data.cover || '/images/riscv-cover.svg')} alt="RISC-V 五级流水线概念示意图，包含取指、译码、执行、访存和写回" width="800" height="560" loading="lazy"/>
+            <span class="blueprint-caption"><span>从一条指令，开始理解一台计算机。</span><Icon name="diagonal"/></span>
+          </a>
+          <div class="experiment-copy"><p class="experiment-label"><span></span> {project.data.status}</p><h3>{project.data.title}</h3><p>{project.data.summary}</p><dl class="project-facts"><div><dt>我做的部分</dt><dd>{project.data.role}</dd></div><div><dt>探索的方向</dt><dd>{project.data.tags.join(' / ')}</dd></div></dl><a class="studio-button outline" href={url(`/projects/${project.data.slug}/`)}>打开项目手记 <Icon name="diagonal" size={18}/></a><a class="quiet-link all-experiments" href={url('/projects/')}>去实验桌看看 <Icon size={17}/></a></div>
+        </div>}
+        {!project && <p class="chapter-empty">新的实验手记正在整理，过些时候来看看。</p>}
+      </div>
+    </section>
+
+    <section class="mailbox chapter shell" id="mailbox" aria-labelledby="mailbox-heading">
+      <div class="letter-heading"><p class="studio-kicker">04 / A LETTER TO SOMEONE NEW</p><h2 id="mailbox-heading">带着一个<br/><span>有趣的问题</span>来吧。</h2><p>关于技术，关于合作，<br/>或者只是分享一件让你眼睛发亮的小事。</p><a class="quiet-link" href={url('/contact/')}>去信箱打个招呼 <Icon name="diagonal" size={18}/></a></div>
+      <div class="postcard"><div class="postcard-top"><span>TO: A NEW FRIEND</span><span class="postage-stamp" aria-hidden="true">✳<small>HELLO<br/>WORLD</small></span></div><span class="postcard-to">写给 Leo</span><a class="postcard-email" href={`mailto:${profile.email}`}>{profile.email}</a><div class="postcard-actions"><button type="button" id="home-copy-email" data-email={profile.email}><Icon name="copy" size={17}/>复制邮箱</button><a href={`mailto:${profile.email}`}>写封邮件 <Icon name="diagonal" size={17}/></a></div><p class="postcard-status" id="home-copy-status" aria-live="polite">很高兴，能在这里遇见你。</p><button class="paper-plane-button" type="button" aria-label="让纸飞机飞一会儿"><Icon name="plane" size={37}/></button><span class="plane-flight-status sr-only" aria-live="polite"></span></div>
+    </section>
+  </div>
+</BaseLayout>
+<script>
+  const lamp = document.querySelector<HTMLButtonElement>('.lamp-toggle');
+  const stage = document.querySelector<HTMLElement>('.world-stage');
+  const lampLabel = lamp?.querySelector('span');
+  lamp?.addEventListener('click', () => {
+    const on = lamp.getAttribute('aria-pressed') !== 'true';
+    lamp.setAttribute('aria-pressed', String(on));
+    stage?.classList.toggle('is-lit', on);
+    if (lampLabel) lampLabel.textContent = on ? '现在是暖暖的灯光' : '让灯光暖一点';
+  });
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const finePointer = window.matchMedia('(pointer: fine)');
+  const arrival = document.querySelector<HTMLElement>('.studio-arrival');
+  arrival?.addEventListener('pointermove', event => {
+    if (reducedMotion.matches || !finePointer.matches) return;
+    const box = arrival.getBoundingClientRect();
+    stage?.style.setProperty('--look-x', `${((event.clientX - box.left) / box.width - .5) * 10}px`);
+    stage?.style.setProperty('--look-y', `${((event.clientY - box.top) / box.height - .5) * 6}px`);
+  });
+  function resetView() { stage?.style.setProperty('--look-x', '0px'); stage?.style.setProperty('--look-y', '0px'); }
+  arrival?.addEventListener('pointerleave', resetView);
+  reducedMotion.addEventListener('change', resetView);
+  document.querySelector<HTMLButtonElement>('#home-copy-email')?.addEventListener('click', async event => {
+    const button = event.currentTarget as HTMLButtonElement;
+    const feedback = document.querySelector<HTMLElement>('#home-copy-status');
+    try { await navigator.clipboard.writeText(button.dataset.email!); if (feedback) feedback.textContent = '邮箱已复制，期待你的来信。'; }
+    catch { if (feedback) feedback.textContent = '请选中上方邮箱复制，或点击“写封邮件”。'; }
+  });
+  const plane = document.querySelector<HTMLButtonElement>('.paper-plane-button');
+  plane?.addEventListener('click', () => {
+    const status = document.querySelector<HTMLElement>('.plane-flight-status');
+    if (status) status.textContent = '愿你的好奇心，也飞得很远。';
+    if (!reducedMotion.matches && !plane.classList.contains('is-flying')) plane.classList.add('is-flying');
+  });
+  plane?.addEventListener('animationend', () => plane.classList.remove('is-flying'));
+</script>

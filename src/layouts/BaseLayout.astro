@@ -1,0 +1,27 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { profile } from '../data/profile';
+import { url } from '../lib/site';
+import '../styles/global.css';
+import '../styles/studio.css';
+import '../styles/interiors.css';
+interface Props { title?: string; description?: string; type?: 'website'|'article'; noindex?: boolean; canonicalPath?: string }
+const { title, description = profile.bio, type = 'website', noindex = false, canonicalPath = Astro.url.pathname } = Astro.props;
+const pageTitle = title ? `${title} · Leo 吴鸿钰` : 'Leo 的奇想小屋 · 吴鸿钰';
+const canonical = new URL(canonicalPath, Astro.site || Astro.url.origin);
+const cover = new URL(url('/social-cover.png'), Astro.site || Astro.url.origin);
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>{pageTitle}</title><meta name="description" content={description}/><meta name="author" content={profile.name}/>
+    <meta name="theme-color" content="#f5f0e5"/>
+    {(noindex || canonical.hostname === 'localhost') && <meta name="robots" content="noindex, nofollow"/>}
+    <link rel="canonical" href={canonical}/><link rel="icon" type="image/svg+xml" href={url('/favicon.svg')}/>
+    <meta property="og:type" content={type}/><meta property="og:title" content={pageTitle}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:image" content={cover}/><meta property="og:locale" content="zh_CN"/><meta property="og:site_name" content="Leo 的奇想小屋"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+  </head>
+  <body><a class="skip-link" href="#main">跳转到正文</a><Header/><main id="main"><slot/></main><Footer/></body>
+</html>

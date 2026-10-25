@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { allProjects } from '../../lib/site';
+const projects = await allProjects();
+---
+<BaseLayout title="作品集" description="从 RISC-V 五级流水线 CPU 出发，记录吴鸿钰的数字设计与技术实践。">
+  <div class="shell studio-interior workbench-page">
+    <header class="page-heading">
+      <p class="eyebrow"><span class="chapter-marker">03</span> THE WORKBENCH / 实验桌</p>
+      <h1>把好奇心，<br/><em>接上电。</em></h1>
+      <p>电路、代码、草稿和一次次尝试。<br class="desktop-break"/>这里放着我亲手做过的东西，也留下了思考的过程。</p>
+      <span class="margin-note" aria-hidden="true">想法 → 动手 → 再想想</span>
+    </header>
+    <div class="listing-caption"><span>桌面档案 / {String(projects.length).padStart(2, '0')}</span><span>学习 · 实践 · 复盘</span></div>
+    <div class="project-list">{projects.map(project => <ProjectCard project={project}/>)}</div>
+    <div class="page-footnote"><span class="tiny-dot"></span>工作台上，还有一些正在整理的想法。</div>
+  </div>
+</BaseLayout>

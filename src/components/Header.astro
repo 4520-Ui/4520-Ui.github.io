@@ -1,0 +1,27 @@
+---
+import { url } from '../lib/site';
+const items = [['/', '首页'], ['/projects/', '作品集'], ['/notes/', '记录'], ['/about/', '关于我'], ['/contact/', '联系我']];
+const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
+---
+<header class="site-header">
+  <div class="shell nav-wrap">
+    <a class="wordmark" href={url('/')} aria-label="Leo 的首页">leo<span>✳</span><span class="wordmark-caption">奇想小屋<br/><small>A LITTLE WORLD OF CURIOSITY</small></span></a>
+    <button class="menu-toggle" aria-label="打开导航菜单" aria-expanded="false" aria-controls="main-navigation"><span></span><span></span></button>
+    <nav id="main-navigation" aria-label="主导航">
+      {items.map(([href, label]) => <a href={url(href)} aria-current={(href === '/' ? pathname === '/' : pathname.startsWith(href)) ? 'page' : undefined}>{label}</a>)}
+    </nav>
+  </div>
+</header>
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const navigation = document.querySelector<HTMLElement>('#main-navigation');
+  function closeMenu() { toggle?.setAttribute('aria-expanded', 'false'); toggle?.setAttribute('aria-label', '打开导航菜单'); navigation?.classList.remove('is-open'); }
+  toggle?.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') !== 'true';
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? '关闭导航菜单' : '打开导航菜单');
+    navigation?.classList.toggle('is-open', open);
+  });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') { closeMenu(); toggle.focus(); } });
+  navigation?.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+</script>

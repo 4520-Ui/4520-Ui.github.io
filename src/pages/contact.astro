@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { profile } from '../data/profile';
+---
+<BaseLayout title="联系我" description="通过邮箱联系吴鸿钰 / Leo，交流数字设计、学习实践与合作想法。"><div class="shell studio-interior contact-page"><header class="page-heading"><p class="eyebrow"><span class="chapter-marker">04</span> A LETTER TO LEO / 小屋信箱</p><h1>带着一个有趣的<br/><em>问题来吧。</em></h1><p>一本好书、一个奇怪的想法，或者一次新的合作。<br class="desktop-break"/>欢迎来信，很期待认识你。</p></header><section class="email-panel" aria-labelledby="email-title"><div class="letter-stamp" aria-hidden="true"><Icon name="mail" size={30}/><span>HELLO, LEO</span></div><p class="eyebrow" id="email-title">TO / 吴鸿钰 LEO</p><a class="email-address" href={`mailto:${profile.email}`}>{profile.email}</a><div class="email-actions"><a class="button primary" href={`mailto:${profile.email}`}>写一封邮件 <Icon name="diagonal"/></a><button class="button secondary" id="copy-email" data-email={profile.email}><Icon name="copy"/>复制邮箱</button></div><p class="copy-feedback" role="status" aria-live="polite"></p><span class="letter-signature" aria-hidden="true">见字如面。</span></section><div class="conversation-topics"><span class="eyebrow">可以从这些话题开始</span><div class="tags"><span>RISC-V 与数字设计</span><span>FPGA 实践</span><span>知识与学习</span><span>项目合作</span><span>阅读与运动</span></div></div>{profile.socials.length > 0 && <section class="social-links">{profile.socials.map(social => <a href={social.url} target="_blank" rel="noopener noreferrer">{social.label}<Icon name="diagonal"/></a>)}</section>}</div></BaseLayout>
+<script>
+  document.querySelector<HTMLButtonElement>('#copy-email')?.addEventListener('click', async event => {
+    const button = event.currentTarget as HTMLButtonElement;
+    const status = document.querySelector<HTMLElement>('.copy-feedback');
+    try { await navigator.clipboard.writeText(button.dataset.email || ''); if (status) status.textContent = '邮箱已复制，期待你的来信。'; }
+    catch { if (status) status.textContent = '暂时无法自动复制，请选中上方邮箱手动复制，或点击写一封邮件。'; }
+  });
+</script>

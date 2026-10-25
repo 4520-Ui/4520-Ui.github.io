@@ -1,0 +1,11 @@
+---
+import { render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { allProjects, url } from '../../lib/site';
+import type { CollectionEntry } from 'astro:content';
+export async function getStaticPaths() { return (await allProjects()).map(project => ({ params: { slug: project.data.slug }, props: { project } })); }
+interface Props { project: CollectionEntry<'projects'> }
+const { project } = Astro.props;
+const { Content, headings } = await render(project);
+---
+<ArticleLayout title={project.data.title} description={project.data.summary} eyebrow="PROJECT / 项目实践" backHref="/projects/" backLabel="返回作品集" headings={headings}><Fragment slot="meta"><span>{project.data.period ?? '项目实践'}</span><span>{project.data.role}</span><span class="status-badge">{project.data.status}</span></Fragment><figure class="article-cover" slot="cover"><img src={url(project.data.cover)} width="800" height="560" alt="五级流水线概念示意图"/><figcaption>五级流水线概念示意 · IF / ID / EX / MEM / WB</figcaption></figure><Content/><div slot="after" class="article-end"><span>实践是理解的开始。</span>{project.data.links.map(link => <a href={link.url} target="_blank" rel="noopener noreferrer">{link.label} ↗</a>)}<a href={url('/contact/')}>交流这个项目 ↗</a></div></ArticleLayout>

@@ -1,0 +1,24 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { url } from '../lib/site';
+import 'katex/dist/katex.min.css';
+interface Props { title: string; description: string; eyebrow: string; backHref: string; backLabel: string; headings?: {depth:number;slug:string;text:string}[] }
+const { title, description, eyebrow, backHref, backLabel, headings = [] } = Astro.props;
+---
+<BaseLayout title={title} description={description} type="article"><article class="shell article-page"><a class="back-link" href={url(backHref)}><Icon name="back" size={17}/>{backLabel}</a><header class="article-header"><p class="eyebrow">{eyebrow}</p><h1>{title}</h1><p class="article-summary">{description}</p><div class="article-meta"><slot name="meta"/></div></header><slot name="cover"/><div class="article-grid"><div class="article-main"><div class="prose"><slot/></div><slot name="after"/></div>{headings.length > 0 && <aside class="article-toc"><div class="toc-inner"><p class="eyebrow">ON THIS PAGE / 本页目录</p><nav aria-label="文章目录">{headings.filter(h => h.depth === 2 || h.depth === 3).map(h => <a class:list={{ 'toc-nested': h.depth === 3 }} href={`#${h.slug}`}>{h.text}</a>)}</nav></div></aside>}</div></article></BaseLayout>
+<script>
+  const diagrams = document.querySelectorAll<HTMLElement>('[data-mermaid]');
+  if (diagrams.length) {
+    const render = async () => {
+      const { default: mermaid } = await import('mermaid');
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'neutral', fontFamily: 'system-ui, sans-serif' });
+      for (const diagram of diagrams) {
+        const original = diagram.textContent || '';
+        try { await mermaid.run({ nodes: [diagram] }); }
+        catch { diagram.textContent = original; diagram.classList.add('diagram-error'); diagram.setAttribute('aria-label', '图表暂时无法显示，以下为原始描述'); }
+      }
+    };
+    render().catch(() => { diagrams.forEach(diagram => diagram.setAttribute('aria-label', '图表源代码')); });
+  }
+</script>

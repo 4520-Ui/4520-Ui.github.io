@@ -1,0 +1,12 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { url, dateLabel } from '../lib/site';
+interface Props { note: CollectionEntry<'notes'>; index?: number }
+const { note, index = 0 } = Astro.props;
+const displayDate = note.data.kind === 'knowledge' ? note.data.updated ?? note.data.date : note.data.date;
+---
+<a class="note-card" href={url(`/notes/${note.data.slug}/`)}>
+  <div class="note-top"><span class="category"><span class:list={['tiny-dot', { peach: note.data.kind === 'journal' }]}></span>{note.data.kind === 'knowledge' ? '知识分享' : '成长记录'}</span><span class="note-number">{String(index + 1).padStart(2, '0')}</span></div>
+  <h3>{note.data.title}</h3><p>{note.data.summary}</p>
+  <div class="note-bottom"><time datetime={displayDate.toISOString()}>{note.data.kind === 'knowledge' ? '更新于 ' : ''}{dateLabel(displayDate)}</time><span class="circle-arrow" aria-hidden="true">↗</span></div>
+</a>

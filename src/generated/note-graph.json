@@ -1,0 +1,18 @@
+{
+  "public-notes": {
+    "outgoing": [
+      "a-place-to-grow"
+    ],
+    "incoming": [
+      "a-place-to-grow"
+    ]
+  },
+  "a-place-to-grow": {
+    "outgoing": [
+      "public-notes"
+    ],
+    "incoming": [
+      "public-notes"
+    ]
+  }
+}

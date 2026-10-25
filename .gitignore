@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+.env
+.env.*
+!.env.example
+.obsidian-publish.local.json
+.obsidian-publish-*/
+.publish-stage-*/
+.publish-backup-*/
+*.log

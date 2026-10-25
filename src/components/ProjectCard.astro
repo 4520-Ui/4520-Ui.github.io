@@ -1,0 +1,11 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { url } from '../lib/site';
+import Icon from './Icon.astro';
+interface Props { project: CollectionEntry<'projects'> }
+const { project } = Astro.props;
+---
+<a class="project-card" href={url(`/projects/${project.data.slug}/`)}>
+  <div class="project-visual"><img src={url(project.data.cover)} width="800" height="560" loading="lazy" alt="RISC-V 五级流水线概念示意：取指、译码、执行、访存、写回"/><span class="visual-label">DIGITAL DESIGN / 01</span></div>
+  <div class="project-copy"><div class="category"><span class="tiny-dot"></span>{project.data.period ?? '项目实践'}<span class="subtle-slash">/</span>{project.data.role}</div><h3>{project.data.title}</h3><p>{project.data.summary}</p><div class="tags">{project.data.tags.map(tag => <span>{tag}</span>)}</div><div class="project-bottom"><span>{project.data.status}</span><span class="text-link">了解这个项目 <Icon/></span></div></div>
+</a>

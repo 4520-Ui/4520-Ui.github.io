@@ -1,0 +1,9 @@
+---
+import { profile } from '../data/profile';
+import { url } from '../lib/site';
+import Icon from './Icon.astro';
+---
+<footer class="site-footer">
+  <div class="shell footer-top"><div><a class="wordmark" href={url('/')}>leo<span>✳</span></a><p>小屋随时开门，好奇心永不打烊。</p></div><a class="footer-email" href={`mailto:${profile.email}`}>下次带个新想法来 <Icon name="diagonal"/></a></div>
+  <div class="shell footer-bottom"><span>© {new Date().getFullYear()} {profile.name} · Leo</span><span>MADE OF LITTLE DISCOVERIES</span><a href={url('/contact/')}>保持联系 <span aria-hidden="true">↗</span></a></div>
+</footer>
